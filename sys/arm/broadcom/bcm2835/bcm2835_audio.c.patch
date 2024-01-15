@@ -1,0 +1,13 @@
+diff --git a/sys/arm/broadcom/bcm2835/bcm2835_audio.c b/sys/arm/broadcom/bcm2835/bcm2835_audio.c
+index e0f525fa952..8358c58b2ba 100644
+--- a/sys/arm/broadcom/bcm2835/bcm2835_audio.c
++++ b/sys/arm/broadcom/bcm2835/bcm2835_audio.c
+@@ -237,7 +237,7 @@ bcm2835_audio_callback(void *param, const VCHI_CALLBACK_REASON_T reason, void *m
+ 					device_printf(sc->dev, "available_space == %d, count = %d, perr=%d\n",
+ 					    ch->available_space, count, perr);
+ 					device_printf(sc->dev,
+-					    "retrieved_samples = %lld, submitted_samples = %lld\n",
++					    "retrieved_samples = %uld, submitted_samples = %uld\n",
+ 					    ch->retrieved_samples, ch->submitted_samples);
+ 				}
+ 				ch->available_space += count;

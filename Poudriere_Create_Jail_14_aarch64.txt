@@ -1,0 +1,17 @@
+jail -c -j Ghostbsd-14-aarch64 -v 14.0-STABLE -a aarch64 
+
+
+root@fredselfbuilt_rpi4b:/usr/local/etc/poudriere.d # cd /usr/ghost14/ghostbsd-src
+root@fredselfbuilt_rpi4b:/usr/ghost14/ghostbsd-src # poudriere jail -c -j Ghostbsd-14-aarch64 -v 14.0-STABLE -a aarch64 
+[00:00:00] Creating Ghostbsd-14-aarch64 fs at /usr/local/poudriere/jails/Ghostbsd-14-aarch64... done
+[00:00:00] Fetching MANIFEST for FreeBSD 14.0-STABLE aarch64
+fetch: https://github.com/ghostbsd/ghostbsd-ports/pub/FreeBSD/snapshots/aarch64/aarch64/14.0-STABLE/MANIFEST: Not Found
+fetch: https://github.com/ghostbsd/ghostbsd-ports/pub/FreeBSD/snapshots/aarch64/aarch64/14.0-STABLE/MANIFEST: Not Found
+[00:00:01] Error: Failed to fetch from https://github.com/ghostbsd/ghostbsd-ports/pub/FreeBSD/snapshots/aarch64/aarch64/14.0-STABLE/MANIFEST
+[00:00:01] Error while creating jail, cleaning up.
+[00:00:01] Removing Ghostbsd-14-aarch64 jail... done
+[00:00:01] Cleaning Ghostbsd-14-aarch64 data... done
+root@fredselfbuilt_rpi4b:/usr/ghost14/ghostbsd-src # vi Poudriere_Create_Jail_14_aarch64.txt
+
+
+

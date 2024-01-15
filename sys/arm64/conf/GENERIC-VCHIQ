@@ -1,0 +1,23 @@
+#
+# GENERIC-VCHIQ
+#
+# Custom kernel for arm64 plus VCHIQ
+#
+# $FreeBSD$
+
+#NO_UNIVERSE
+
+include		GENERIC
+ident		GENERIC-VCHIQ
+
+device vchiq
+
+# If you want to have any chance of compiling this in a RPI Zero 2
+# uncomment the stuff below
+
+# nomakeoptions DEBUG
+# nomakeoptions WITH_CTF
+# nooptions DDB_CTF
+# makeoptions MALLOC_PRODUCTION=1
+
+

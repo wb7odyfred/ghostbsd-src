@@ -1,0 +1,1 @@
+/usr/local/bin:/usr/ports/lang:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/root/bin

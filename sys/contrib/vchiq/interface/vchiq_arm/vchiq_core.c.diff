@@ -1,0 +1,505 @@
+34,37d33
+< #define __STDC_FORMAT_MACROS
+< #include "/usr/src/include/inttypes.h"
+< #include <sys/stdint.h>
+< // #include "/usr/src/include/stdio.h"
+399c395
+< 	vchiq_log_trace(vchiq_core_log_level, "%d: callback:%d (%s, %x, %x)",
+---
+> 	vchiq_log_trace(vchiq_core_log_level, "%d: callback:%d (%s, %lx, %lx)",
+401c397
+< 		(unsigned int)header, (unsigned int)bulk_userdata);
+---
+> 		(unsigned long)header, (unsigned long)bulk_userdata);
+424,425d419
+< #define ACTUAL_EVENT_SEM_ADDR(ref,offset)\
+< 	((struct semaphore *)(((size_t) ref) + ((size_t) offset)))
+427c421
+< remote_event_create(VCHIQ_STATE_T *ref, REMOTE_EVENT_T *event)
+---
+> remote_event_create(REMOTE_EVENT_T *event)
+432c426
+< 	_sema_init(ACTUAL_EVENT_SEM_ADDR(ref,event->event), 0);
+---
+> 	_sema_init(event->event, 0);
+442c436
+< remote_event_wait(VCHIQ_STATE_T *ref, REMOTE_EVENT_T *event)
+---
+> remote_event_wait(REMOTE_EVENT_T *event)
+446,448d439
+< #if defined(__aarch64__)
+< 		dsb(sy);
+< #else
+450,451d440
+< #endif
+< 
+453c442
+< 			if (down_interruptible(ACTUAL_EVENT_SEM_ADDR(ref,event->event)) != 0) {
+---
+> 			if (down_interruptible(event->event) != 0) {
+467c456
+< remote_event_signal_local(VCHIQ_STATE_T *ref, REMOTE_EVENT_T *event)
+---
+> remote_event_signal_local(REMOTE_EVENT_T *event)
+469,474d457
+< /*
+<  * Mirror
+<  * https://github.com/raspberrypi/linux/commit/a50c4c9a65779ca835746b5fd79d3d5278afbdbe
+<  * for extra safety
+<  */
+< 	event->fired = 1;
+476c459
+< 	up(ACTUAL_EVENT_SEM_ADDR(ref,event->event));
+---
+> 	up(event->event);
+480c463
+< remote_event_poll(VCHIQ_STATE_T *ref, REMOTE_EVENT_T *event)
+---
+> remote_event_poll(REMOTE_EVENT_T *event)
+483c466
+< 		remote_event_signal_local(ref,event);
+---
+> 		remote_event_signal_local(event);
+489,492c472,475
+< 	remote_event_poll(state , &state->local->sync_trigger);
+< 	remote_event_poll(state , &state->local->sync_release);
+< 	remote_event_poll(state , &state->local->trigger);
+< 	remote_event_poll(state , &state->local->recycle);
+---
+> 	remote_event_poll(&state->local->sync_trigger);
+> 	remote_event_poll(&state->local->sync_release);
+> 	remote_event_poll(&state->local->trigger);
+> 	remote_event_poll(&state->local->recycle);
+573c556
+< 	remote_event_signal_local(state, &state->local->trigger);
+---
+> 	remote_event_signal_local(&state->local->trigger);
+660,661c643,644
+< 		vchiq_log_trace(vchiq_core_log_level, "%d: pfq %d=0x%s 0x%" PRIx32 " 0x%" PRIx32 " ",
+< 			state->id, slot_index, data,
+---
+> 		vchiq_log_trace(vchiq_core_log_level, "%d: pfq %d=%lx %x %x",
+> 			state->id, slot_index, (unsigned long)data,
+695c678
+< 						"(header %x, msgid %x, "
+---
+> 						"(header %lx, msgid %x, "
+701c684
+< 						(unsigned int)header, msgid,
+---
+> 						(unsigned long)header, msgid,
+724c707
+< 							"%d: pfq:%d 0x%" PRIx32 "@0x%p - "
+---
+> 							"%d: pfq:%d %x@%lx - "
+728c711
+< 							header,
+---
+> 							(unsigned long)header,
+735,736c718,719
+< 								"=%d (header 0x%p"
+< 								", msgid 0x%" PRIx32 ", "
+---
+> 								"=%d (header %lx"
+> 								", msgid %x, "
+738,739c721,722
+< 								" 0x%" PRIx32 ", header->"
+< 								"size 0x%" PRIx32 ")",
+---
+> 								" %x, header->"
+> 								"size %x)",
+741c724
+< 							header,
+---
+> 							(unsigned long)header,
+755,757c738,740
+< 					"pfq - pos 0x%" PRIx32 " : header 0x%p, msgid 0%c" ", "
+< 					"header->msgid 0x%" PRIx32 ", header->size 0x%" PRIx32 "",
+< 					pos, header, msgid,
+---
+> 					"pfq - pos %x: header %lx, msgid %x, "
+> 					"header->msgid %x, header->size %x",
+> 					pos, (unsigned long)header, msgid,
+905c888
+< 			"%d: qm %s@%p,0x%x  (%d->%d)",
+---
+> 			"%d: qm %s@%lx,%x (%d->%d)",
+908c891
+< 			header, size,
+---
+> 			(unsigned long)header, size,
+971c954
+< 			"%d: qm %s@0x%p ,size  %d  (%d->%d)", state->id,
+---
+> 			"%d: qm %s@%lx,%x (%d->%d)", state->id,
+973c956
+< 			header, size,
+---
+> 			(unsigned long)header, size,
+1037c1020
+< 	remote_event_wait(state, &local->sync_release);
+---
+> 	remote_event_wait(&local->sync_release);
+1056c1039
+< 			"%d: qms %s@0x%p , 0x%" PRIx32 " (%d->%d)", state->id,
+---
+> 			"%d: qms %s@%lx,%x (%d->%d)", state->id,
+1058c1041
+< 			header, size,
+---
+> 			(unsigned long)header, size,
+1085c1068
+< 			"%d: qms %s@0x%p , 0x%" PRIx32 " (%d->%d)", state->id,
+---
+> 			"%d: qms %s@%lx,%x (%d->%d)", state->id,
+1087c1070
+< 			header, size,
+---
+> 			(unsigned long)header, size,
+1117a1101,1103
+> 	/* Make sure the new header is visible to the peer. */
+> 	wmb();
+> 
+1385c1371
+< 					"%s %c%c%c%c d:%d len:%d 0x%p <->0x%p ",
+---
+> 					"%s %c%c%c%c d:%d len:%d %lx<->%lx",
+1391,1392c1377,1378
+< 					bulk->data,
+< 					bulk->remote_data);
+---
+> 					(unsigned long)bulk->data,
+> 					(unsigned long)bulk->remote_data);
+1396c1382
+< 					" rx len:%d 0x%p <->0x%p ",
+---
+> 					" rx len:%d %lx<->%lx",
+1403,1404c1389,1390
+< 					bulk->data,
+< 					bulk->remote_data);
+---
+> 					(unsigned long)bulk->data,
+> 					(unsigned long)bulk->remote_data);
+1539,1540c1525,1526
+< 			"%d: prs OPEN@0x%p (%d->'%c%c%c%c')",
+< 			state->id, header,
+---
+> 			"%d: prs OPEN@%lx (%d->'%c%c%c%c')",
+> 			state->id, (unsigned long)header,
+1678c1664
+< 		// DEBUG_VALUE(PARSE_HEADER, header);
+---
+> 		DEBUG_VALUE(PARSE_HEADER, (unsigned long)header);
+1712c1698
+< 						"%d: prs %s@%p (%d->%d) - "
+---
+> 						"%d: prs %s@%lx (%d->%d) - "
+1715c1701
+< 						header,
+---
+> 						(unsigned long)header,
+1722c1708
+< 					"%d: prs %s@0x%p (%d->%d) - "
+---
+> 					"%d: prs %s@%lx (%d->%d) - "
+1725c1711
+< 					header,
+---
+> 					(unsigned long)header,
+1751c1737
+< 		if ((((unsigned long)(void *)header) & VCHIQ_SLOT_MASK) + calc_stride(size)
+---
+> 		if (((unsigned long) header & VCHIQ_SLOT_MASK) + calc_stride(size)
+1754c1740
+< 				"header 0x%p (msgid %x) - size %x too big for "
+---
+> 				"header %lx (msgid %x) - size %x too big for "
+1756c1742
+< 				header, (unsigned int)msgid,
+---
+> 				(unsigned long)header, (unsigned int)msgid,
+1775,1776c1761,1762
+< 				"%d: prs OPENACK@%p,0x%x (%d->%d) v:%d",
+< 				state->id, header, size,
+---
+> 				"%d: prs OPENACK@%lx,%x (%d->%d) v:%d",
+> 				state->id, (unsigned long)header, size,
+1793,1794c1779,1780
+< 				"%d: prs CLOSE@%p (%d->%d)",
+< 				state->id, header,
+---
+> 				"%d: prs CLOSE@%lx (%d->%d)",
+> 				state->id, (unsigned long)header,
+1811,1812c1797,1798
+< 				"%d: prs DATA@%p,%x (%d->%d)",
+< 				state->id, header, size,
+---
+> 				"%d: prs DATA@%lx,%x (%d->%d)",
+> 				state->id, (unsigned long)header, size,
+1836,1837c1822,1823
+< 				"%d: prs CONNECT@%p",
+< 				state->id, header);
+---
+> 				"%d: prs CONNECT@%lx",
+> 				state->id, (unsigned long)header);
+1842,1846d1827
+< /* 
+<  * XXXMDC Apparently nothing uses this 
+<  * https://github.com/raspberrypi/linux/commit/14f4d72fb799a9b3170a45ab80d4a3ddad541960
+<  * but taking out the master bits is a whole new job
+<  */
+1848,1852c1829
+< 		case VCHIQ_MSG_BULK_TX:
+< 			WARN_ON(1);
+< 			break;
+< #if 0
+< 		{
+---
+> 		case VCHIQ_MSG_BULK_TX: {
+1875c1852
+< 					(void *)((int *)header->data)[0];
+---
+> 					(void *)((long *)header->data)[0];
+1880c1857
+< 					"%d: prs %s@%x (%d->%d) %x@%x",
+---
+> 					"%d: prs %s@%lx (%d->%d) %x@%lx",
+1882c1859
+< 					(unsigned int)header,
+---
+> 					(unsigned long)header,
+1885c1862
+< 					(unsigned int)bulk->remote_data);
+---
+> 					(unsigned long)bulk->remote_data);
+1914,1915c1891
+< 						1//retry_poll
+< 						);
+---
+> 						1/*retry_poll*/);
+1917,1918c1893
+< 		}
+< #endif
+---
+> 		} break;
+1940c1915
+< 						"%d: prs %s@%p (%d->%d) "
+---
+> 						"%d: prs %s@%lx (%d->%d) "
+1943c1918
+< 						header,
+---
+> 						(unsigned long)header,
+1960c1935
+< 					"%d: prs %s@%p (%d->%d) %x@%p",
+---
+> 					"%d: prs %s@%lx (%d->%d) %x@%lx",
+1962c1937
+< 					header,
+---
+> 					(unsigned long)header,
+1964c1939
+< 					bulk->actual, bulk->data);
+---
+> 					bulk->actual, (unsigned long)bulk->data);
+1986,1987c1961,1962
+< 				"%d: prs PADDING@%p,%x",
+< 				state->id, header, size);
+---
+> 				"%d: prs PADDING@%lx,%x",
+> 				state->id, (unsigned long)header, size);
+1992,1993c1967,1968
+< 				"%d: prs PAUSE@%p,%x",
+< 				state->id, header, size);
+---
+> 				"%d: prs PAUSE@%lx,%x",
+> 				state->id, (unsigned long)header, size);
+2016,2017c1991,1992
+< 				"%d: prs RESUME@%p,%x",
+< 				state->id, header, size);
+---
+> 				"%d: prs RESUME@%lx,%x",
+> 				state->id, (unsigned long)header, size);
+2038,2039c2013,2014
+< 				"%d: prs invalid msgid %x@%p,%x",
+< 				state->id, msgid, header, size);
+---
+> 				"%d: prs invalid msgid %x@%lx,%x",
+> 				state->id, msgid, (unsigned long)header, size);
+2079c2054
+< 		remote_event_wait(state, &local->trigger);
+---
+> 		remote_event_wait(&local->trigger);
+2169c2144,2145
+< 		remote_event_wait(state, &local->recycle);
+---
+> 		remote_event_wait(&local->recycle);
+> 
+2192c2168
+< 		remote_event_wait(state, &local->sync_trigger);
+---
+> 		remote_event_wait(&local->sync_trigger);
+2206c2182
+< 				"%d: sf %s@%p (%d->%d) - "
+---
+> 				"%d: sf %s@%lx (%d->%d) - "
+2209c2185
+< 				header,
+---
+> 				(unsigned long)header,
+2240,2241c2216,2217
+< 				"%d: sf OPENACK@%p,%x (%d->%d) v:%d",
+< 				state->id, header, size,
+---
+> 				"%d: sf OPENACK@%lx,%x (%d->%d) v:%d",
+> 				state->id, (unsigned long)header, size,
+2255,2256c2231,2232
+< 				"%d: sf DATA@%p,%x (%d->%d)",
+< 				state->id, header, size,
+---
+> 				"%d: sf DATA@%lx,%x (%d->%d)",
+> 				state->id, (unsigned long)header, size,
+2275,2276c2251,2252
+< 				"%d: sf unexpected msgid %x@%p,%x",
+< 				state->id, msgid, header, size);
+---
+> 				"%d: sf unexpected msgid %x@%lx,%x",
+> 				state->id, msgid, (unsigned long)header, size);
+2309c2285
+< 	int mem_align = (int)((VCHIQ_SLOT_SIZE - (long)mem_base) & VCHIQ_SLOT_MASK);
+---
+> 	int mem_align = (VCHIQ_SLOT_SIZE - (long)mem_base) & VCHIQ_SLOT_MASK;
+2361,2362c2337,2338
+< 		vchiq_loud_error("slot_zero=%p: magic=%x (expected %x)",
+< 			slot_zero, slot_zero->magic, VCHIQ_MAGIC);
+---
+> 		vchiq_loud_error("slot_zero=%lx: magic=%x (expected %x)",
+> 			(unsigned long)slot_zero, slot_zero->magic, VCHIQ_MAGIC);
+2375c2351
+< 		vchiq_loud_error("slot_zero=%p: VideoCore version=%d "
+---
+> 		vchiq_loud_error("slot_zero=%lx: VideoCore version=%d "
+2377c2353
+< 			slot_zero, slot_zero->version,
+---
+> 			(unsigned long)slot_zero, slot_zero->version,
+2387c2363
+< 		vchiq_loud_error("slot_zero=%p: version=%d (VideoCore "
+---
+> 		vchiq_loud_error("slot_zero=%lx: version=%d (VideoCore "
+2389c2365
+< 			slot_zero, VCHIQ_VERSION,
+---
+> 			(unsigned long)slot_zero, VCHIQ_VERSION,
+2402c2378
+< 			vchiq_loud_error("slot_zero=%p: slot_zero_size=%x "
+---
+> 			vchiq_loud_error("slot_zero=%lx: slot_zero_size=%x "
+2404c2380
+< 				slot_zero,
+---
+> 				(unsigned long)slot_zero,
+2408c2384
+< 			vchiq_loud_error("slot_zero=%p: slot_size=%d "
+---
+> 			vchiq_loud_error("slot_zero=%lx: slot_size=%d "
+2410c2386
+< 				slot_zero, slot_zero->slot_size,
+---
+> 				(unsigned long)slot_zero, slot_zero->slot_size,
+2413c2389
+< 			vchiq_loud_error("slot_zero=%p: max_slots=%d "
+---
+> 			vchiq_loud_error("slot_zero=%lx: max_slots=%d "
+2415c2391
+< 				slot_zero, slot_zero->max_slots,
+---
+> 				(unsigned long)slot_zero, slot_zero->max_slots,
+2418c2394
+< 			vchiq_loud_error("slot_zero=%p: max_slots_per_side=%d "
+---
+> 			vchiq_loud_error("slot_zero=%lx: max_slots_per_side=%d "
+2420c2396
+< 				slot_zero,
+---
+> 				(unsigned long)slot_zero,
+2505,2506c2481,2482
+< 	local->trigger.event = offsetof(VCHIQ_STATE_T, trigger_event);
+< 	remote_event_create(state, &local->trigger);
+---
+> 	local->trigger.event = &state->trigger_event;
+> 	remote_event_create(&local->trigger);
+2509,2510c2485,2486
+< 	local->recycle.event = offsetof(VCHIQ_STATE_T, recycle_event);
+< 	remote_event_create(state, &local->recycle);
+---
+> 	local->recycle.event = &state->recycle_event;
+> 	remote_event_create(&local->recycle);
+2513,2514c2489,2490
+< 	local->sync_trigger.event = offsetof(VCHIQ_STATE_T, sync_trigger_event);
+< 	remote_event_create(state, &local->sync_trigger);
+---
+> 	local->sync_trigger.event = &state->sync_trigger_event;
+> 	remote_event_create(&local->sync_trigger);
+2516,2517c2492,2493
+< 	local->sync_release.event = offsetof(VCHIQ_STATE_T, sync_release_event);
+< 	remote_event_create(state, &local->sync_release);
+---
+> 	local->sync_release.event = &state->sync_release_event;
+> 	remote_event_create(&local->sync_release);
+2522c2498
+< 	remote_event_signal_local(state, &local->sync_release);
+---
+> 	remote_event_signal_local(&local->sync_release);
+2802,2803c2778,2779
+< 						"  fsi - hdr %p",
+< 						header);
+---
+> 						"  fsi - hdr %lx",
+> 						(unsigned long)header);
+2810c2786
+< 						"fsi - pos %x: header %p, "
+---
+> 						"fsi - pos %x: header %lx, "
+2813c2789
+< 						pos, header,
+---
+> 						pos, (unsigned long)header,
+3387c3363
+< 		"%d: bt (%d->%d) %cx %x@%p %p",
+---
+> 		"%d: bt (%d->%d) %cx %x@%lx %lx",
+3390c3366
+< 		size, bulk->data, userdata);
+---
+> 		size, (unsigned long)bulk->data, (unsigned long)userdata);
+3409c3385
+< 		uint32_t payload[2] = { (uint32_t)(uintptr_t)bulk->data, bulk->size };
+---
+> 		int payload[2] = { (long)bulk->data, bulk->size };
+3552a3529
+> 	wmb();
+3736c3713
+< 		"  tx_pos=%x(@%p), rx_pos=%x(@%p)",
+---
+> 		"  tx_pos=%x(@%lx), rx_pos=%x(@%lx)",
+3738c3715
+< 		state->tx_data +
+---
+> 		(unsigned long)state->tx_data +
+3741c3718
+< 		state->rx_data +
+---
+> 		(unsigned long)state->rx_data +
+3843,3844c3820,3821
+< 				"  Ctrl: tx_count=%d, tx_bytes=%lu, "
+< 				"rx_count=%d, rx_bytes=%lu",
+---
+> 				"  Ctrl: tx_count=%d, tx_bytes=%llu, "
+> 				"rx_count=%d, rx_bytes=%llu",
+3852,3853c3829,3830
+< 				"  Bulk: tx_count=%d, tx_bytes=%lu, "
+< 				"rx_count=%d, rx_bytes=%lu",
+---
+> 				"  Bulk: tx_count=%d, tx_bytes=%llu, "
+> 				"rx_count=%d, rx_bytes=%llu",

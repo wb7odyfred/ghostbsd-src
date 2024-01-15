@@ -1,0 +1,30 @@
+@@ -396,9 +392,9 @@
+ 	VCHIQ_HEADER_T *header, void *bulk_userdata)
+ {
+ 	VCHIQ_STATUS_T status;
+-	vchiq_log_trace(vchiq_core_log_level, "%d: callback:%d (%s, 0x%p, 0x%p)",
++	vchiq_log_trace(vchiq_core_log_level, "%d: callback:%d (%s, %x, %x)",
+ 		service->state->id, service->localport, reason_names[reason],
+-		header, bulk_userdata);
++		(unsigned int)header, (unsigned int)bulk_userdata);
+ 	status = service->base.callback(reason, header, service->handle,
+ 		bulk_userdata);
+ 	if (status == VCHIQ_ERROR) {
+@@ -692,13 +675,13 @@
+ 					vchiq_log_error(vchiq_core_log_level,
+ 						"service %d "
+ 						"message_use_count=%d "
+-						"(header 0x%p, msgid 0x%" PRIx32 ", "
+-						"header->msgid 0x%" PRIx32 ", "
+-						"header->size 0x%" PRIx32 ")",
++						"(header %x, msgid %x, "
++						"header->msgid %x, "
++						"header->size %x)",
+ 						port,
+ 						service_quota->
+ 							message_use_count,
+-						header, msgid,
++						(unsigned int)header, msgid,
+ 						header->msgid,
+ 						header->size);
+ 					WARN(1, "invalid message use count\n");
