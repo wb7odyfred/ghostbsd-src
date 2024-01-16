@@ -341,7 +341,6 @@ down_interruptible(struct semaphore *s)
 	int ret ;
 
 	ret = 0;
-
 	mtx_lock(&s->mtx);
 
 	while (s->value == 0) {
@@ -349,13 +348,11 @@ down_interruptible(struct semaphore *s)
 		ret = cv_wait_sig(&s->cv, &s->mtx);
 		s->waiters--;
 
-		if (ret == EINTR) {
+		/* XXXMDC As per its semaphore.c, linux can only return EINTR */
+		if (ret) {
 			mtx_unlock(&s->mtx);
-			return (-EINTR);
+			return -EINTR;
 		}
-
-		if (ret == ERESTART)
-			continue;
 	}
 
 	s->value--;
@@ -442,8 +439,7 @@ flush_signals(VCHIQ_THREAD_T thr)
 int
 fatal_signal_pending(VCHIQ_THREAD_T thr)
 {
-	printf("Implement ME: %s\n", __func__);
-	return (0);
+	return (curproc_sigkilled());
 }
 
 /*

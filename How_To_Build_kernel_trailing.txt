@@ -1,0 +1,144 @@
+===> wlan_ccmp (all)
+--- all_subdir_wlan_rssadapt ---
+===> wlan_rssadapt (all)
+--- all_subdir_usb ---
+--- all_subdir_usb/uark ---
+===> usb/uark (all)
+--- all_subdir_wlan_tkip ---
+===> wlan_tkip (all)
+--- all_subdir_usb ---
+--- all_subdir_usb/ubsa ---
+===> usb/ubsa (all)
+--- all_subdir_usb/ubser ---
+===> usb/ubser (all)
+--- all_subdir_wlan_wep ---
+===> wlan_wep (all)
+--- all_subdir_usb ---
+--- all_subdir_usb/uchcom ---
+===> usb/uchcom (all)
+--- all_subdir_usb/ucycom ---
+===> usb/ucycom (all)
+--- all_subdir_wlan_xauth ---
+===> wlan_xauth (all)
+--- all_subdir_usb ---
+--- all_subdir_usb/ufoma ---
+===> usb/ufoma (all)
+--- all_subdir_usb/uftdi ---
+===> usb/uftdi (all)
+--- all_subdir_xdr ---
+===> xdr (all)
+--- all_subdir_xl ---
+===> xl (all)
+--- all_subdir_xz ---
+===> xz (all)
+--- all_subdir_usb ---
+--- all_subdir_usb/ugensa ---
+===> usb/ugensa (all)
+--- all_subdir_zfs ---
+===> zfs (all)
+--- all_subdir_usb ---
+--- all_subdir_usb/uipaq ---
+===> usb/uipaq (all)
+--- all_subdir_zlib ---
+===> zlib (all)
+--- all_subdir_usb ---
+--- all_subdir_usb/ulpt ---
+===> usb/ulpt (all)
+--- all_subdir_usb/umct ---
+===> usb/umct (all)
+--- all_subdir_usb/umcs ---
+===> usb/umcs (all)
+--- all_subdir_usb/umodem ---
+===> usb/umodem (all)
+--- all_subdir_usb/umoscom ---
+===> usb/umoscom (all)
+--- all_subdir_usb/uplcom ---
+===> usb/uplcom (all)
+--- all_subdir_usb/uslcom ---
+===> usb/uslcom (all)
+--- all_subdir_usb/uvisor ---
+===> usb/uvisor (all)
+--- all_subdir_usb/uvscom ---
+===> usb/uvscom (all)
+--- all_subdir_usb/cp2112 ---
+===> usb/cp2112 (all)
+--- all_subdir_usb/udl ---
+===> usb/udl (all)
+--- all_subdir_usb/uether ---
+===> usb/uether (all)
+--- all_subdir_usb/aue ---
+===> usb/aue (all)
+--- all_subdir_usb/axe ---
+===> usb/axe (all)
+--- all_subdir_usb/axge ---
+===> usb/axge (all)
+--- all_subdir_usb/cdce ---
+===> usb/cdce (all)
+--- all_subdir_usb/cdceem ---
+===> usb/cdceem (all)
+--- all_subdir_usb/cue ---
+===> usb/cue (all)
+--- all_subdir_usb/kue ---
+===> usb/kue (all)
+--- all_subdir_usb/mos ---
+===> usb/mos (all)
+--- all_subdir_usb/rue ---
+===> usb/rue (all)
+--- all_subdir_usb/smsc ---
+===> usb/smsc (all)
+--- all_subdir_usb/udav ---
+===> usb/udav (all)
+--- all_subdir_usb/uhso ---
+===> usb/uhso (all)
+--- all_subdir_usb/ipheth ---
+===> usb/ipheth (all)
+--- all_subdir_usb/muge ---
+===> usb/muge (all)
+--- all_subdir_usb/ure ---
+===> usb/ure (all)
+--- all_subdir_usb/urndis ---
+===> usb/urndis (all)
+--- all_subdir_usb/usfs ---
+===> usb/usfs (all)
+--- all_subdir_usb/umass ---
+===> usb/umass (all)
+--- all_subdir_usb/urio ---
+===> usb/urio (all)
+--- all_subdir_usb/uacpi ---
+===> usb/uacpi (all)
+--- all_subdir_usb/template ---
+===> usb/template (all)
+--- all_subdir_usb/quirk ---
+===> usb/quirk (all)
+--- all_subdir_usb/g_audio ---
+===> usb/g_audio (all)
+--- all_subdir_usb/g_modem ---
+===> usb/g_modem (all)
+--- all_subdir_usb/g_mouse ---
+===> usb/g_mouse (all)
+--- all_subdir_usb/g_keyboard ---
+===> usb/g_keyboard (all)
+--- kernel.full ---
+      text      data       bss        dec         hex   filename
+  12771823   1365042   3235840   17372705   0x1091621   kernel.full
+--- kernel.debug ---
+--- kernel.bin ---
+--- kernel.debug ---
+objcopy --only-keep-debug kernel.full kernel.debug
+--- kernel ---
+objcopy --strip-debug --add-gnu-debuglink=kernel.debug  kernel.full kernel
+--- kernel.bin ---
+created kernel.bin from kernel.full
+       82.18 real       110.11 user        62.06 sys
+--------------------------------------------------------------
+>>> Kernel build for GENERIC-VCHIQ completed on Tue Jan 16 00:59:59 PST 2024
+--------------------------------------------------------------
+>>> Kernel(s)  GENERIC-VCHIQ built in 83 seconds, ncpu: 4, make -j4
+--------------------------------------------------------------
+       83.85 real       110.74 user        63.32 sys
+root@Ghost14-selfbuilt-rpi4B-nginx-tst1:/usr/repos/ghost14/ghostbsd-src # time make -j4 buildkernel  KERNCONF=GENERIC-VCHIQ -DNO_CLEAN
+
+
+Use  command line from  /usr/src  or from /usr/ghost14/ghostbsd-src
+
+git clone  github.com/ghostbsd/ghostbsd-src.git /usr/src

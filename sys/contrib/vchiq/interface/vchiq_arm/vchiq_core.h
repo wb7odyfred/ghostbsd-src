@@ -274,7 +274,7 @@ typedef struct vchiq_bulk_queue_struct {
 typedef struct remote_event_struct {
 	int armed;
 	int fired;
-	struct semaphore *event;
+	uint32_t event;
 } REMOTE_EVENT_T;
 
 typedef struct opaque_platform_state_t *VCHIQ_PLATFORM_STATE_T;
